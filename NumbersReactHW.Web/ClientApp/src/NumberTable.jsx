@@ -1,6 +1,7 @@
 import React from 'react'
 import SelectedNumberItem from './SelectedNumberItem';
 import NumberRow from './NumberRow';
+import { v4 as uuidv4 } from 'uuid';
 
 class NumberTable extends React.Component {
 
@@ -15,14 +16,14 @@ class NumberTable extends React.Component {
     }
 
     addNumber = () => {
-        this.setState({ numbers: [...this.state.numbers, this.getRandomNumber()] });
+        this.setState({ numbers: [...this.state.numbers, { number: this.getRandomNumber(), id: uuidv4() }] });
     }
 
     onSelectClicked = (number) => {
         const { selectedNumbers } = this.state;
 
-        if (selectedNumbers.includes(number)) {
-            this.setState({ selectedNumbers: selectedNumbers.filter(n => n !== number) })
+        if (selectedNumbers.map(n => n.id).includes(number.id)) {
+            this.setState({ selectedNumbers: selectedNumbers.filter(n => n.id !== number.id) })
 
         } else {
             this.setState({ selectedNumbers: [...selectedNumbers, number] })
@@ -32,8 +33,8 @@ class NumberTable extends React.Component {
     onLockClick = (number) => {
         const { lockedNumbers } = this.state;
 
-        if (lockedNumbers.includes(number)) {
-            this.setState({ lockedNumbers: lockedNumbers.filter(n => n !== number) })
+        if (lockedNumbers.map(n => n.id).includes(number.id)) {
+            this.setState({ lockedNumbers: lockedNumbers.filter(n => n.id !== number.id) })
 
         } else {
             this.setState({ lockedNumbers: [...lockedNumbers, number] })
@@ -53,7 +54,7 @@ class NumberTable extends React.Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {numbers.map(n => <NumberRow number={n}
+                    {numbers.map(n => <NumberRow key={n.id} number={n.number}
                         isSelected={selectedNumbers.includes(n)}
                         onSelectClicked={() => this.onSelectClicked(n)}
                         isLocked={lockedNumbers.includes(n)}
@@ -66,7 +67,7 @@ class NumberTable extends React.Component {
                     <h1>Selected Numbers</h1>
                     <ul className="list-group">
                         {selectedNumbers.map(n =>
-                            <SelectedNumberItem number={n}
+                            <SelectedNumberItem key={n.id} number={n.number}
                                 onLockClick={() => this.onLockClick(n)}
                                 isLocked={lockedNumbers.includes(n)}
                             />)}
