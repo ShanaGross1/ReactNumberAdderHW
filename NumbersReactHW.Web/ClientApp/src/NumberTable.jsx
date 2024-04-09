@@ -8,7 +8,7 @@ class NumberTable extends React.Component {
     state = {
         numbers: [],
         selectedNumbers: [],
-        lockedNumbers: []
+        lockedNumberIds: []
     }
 
     getRandomNumber = () => {
@@ -30,19 +30,19 @@ class NumberTable extends React.Component {
         }
     }
 
-    onLockClick = (number) => {
-        const { lockedNumbers } = this.state;
+    onLockClick = (id) => {
+        const { lockedNumberIds } = this.state;
 
-        if (lockedNumbers.map(n => n.id).includes(number.id)) {
-            this.setState({ lockedNumbers: lockedNumbers.filter(n => n.id !== number.id) })
+        if (lockedNumberIds.includes(id)) {
+            this.setState({ lockedNumberIds: lockedNumberIds.filter(n => n !== id) })
 
         } else {
-            this.setState({ lockedNumbers: [...lockedNumbers, number] })
+            this.setState({ lockedNumberIds: [...lockedNumberIds, id] })
         }
     }
 
     render() {
-        const { numbers, lockedNumbers, selectedNumbers } = this.state;
+        const { numbers, lockedNumberIds, selectedNumbers } = this.state;
 
         return (<>
             <button onClick={this.addNumber} className="btn btn-success btn-lg w-100">Add</button>
@@ -55,9 +55,9 @@ class NumberTable extends React.Component {
                 </thead>
                 <tbody>
                     {numbers.map(n => <NumberRow key={n.id} number={n.number}
-                        isSelected={selectedNumbers.includes(n)}
+                        isSelected={selectedNumbers.map(x => x.id).includes(n.id)}
                         onSelectClicked={() => this.onSelectClicked(n)}
-                        isLocked={lockedNumbers.includes(n)}
+                        isLocked={lockedNumberIds.includes(n.id)}
                     />)}
                 </tbody>
             </table>
@@ -68,8 +68,8 @@ class NumberTable extends React.Component {
                     <ul className="list-group">
                         {selectedNumbers.map(n =>
                             <SelectedNumberItem key={n.id} number={n.number}
-                                onLockClick={() => this.onLockClick(n)}
-                                isLocked={lockedNumbers.includes(n)}
+                                onLockClick={() => this.onLockClick(n.id)}
+                                isLocked={lockedNumberIds.includes(n.id)}
                             />)}
                     </ul>
                 </div>
