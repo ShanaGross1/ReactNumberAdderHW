@@ -1,5 +1,5 @@
 import React from 'react'
-import SelectedNumbers from './SelectedNumbers';
+import SelectedNumberItem from './SelectedNumberItem';
 import NumberRow from './NumberRow';
 
 class NumberTable extends React.Component {
@@ -19,20 +19,24 @@ class NumberTable extends React.Component {
     }
 
     onSelectClicked = (number) => {
-        if (this.state.selectedNumbers.includes(number)) {
-            this.setState({ selectedNumbers: this.state.selectedNumbers.filter(n => n !== number) })
+        const { selectedNumbers } = this.state;
+
+        if (selectedNumbers.includes(number)) {
+            this.setState({ selectedNumbers: selectedNumbers.filter(n => n !== number) })
 
         } else {
-            this.setState({ selectedNumbers: [...this.state.selectedNumbers, number] })
+            this.setState({ selectedNumbers: [...selectedNumbers, number] })
         }
     }
 
     onLockClick = (number) => {
-        if (this.state.lockedNumbers.includes(number)) {
-            this.setState({ lockedNumbers: this.state.lockedNumbers.filter(n => n !== number) })
+        const { lockedNumbers } = this.state;
+
+        if (lockedNumbers.includes(number)) {
+            this.setState({ lockedNumbers: lockedNumbers.filter(n => n !== number) })
 
         } else {
-            this.setState({ lockedNumbers: [...this.state.lockedNumbers, number] })
+            this.setState({ lockedNumbers: [...lockedNumbers, number] })
         }
     }
 
@@ -62,7 +66,7 @@ class NumberTable extends React.Component {
                     <h1>Selected Numbers</h1>
                     <ul className="list-group">
                         {selectedNumbers.map(n =>
-                            <SelectedNumbers number={n}
+                            <SelectedNumberItem number={n}
                                 onLockClick={() => this.onLockClick(n)}
                                 isLocked={lockedNumbers.includes(n)}
                             />)}
